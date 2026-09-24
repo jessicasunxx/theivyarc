@@ -38,7 +38,7 @@ export function createWorker(assets=new Map(),transport=fetch){
    try{
     const response=await transport('https://api.resend.com/emails',{
      method:'POST',headers:{Authorization:`Bearer ${env.RESEND_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':`xutu-contact-${submissionId}`},
-     body:JSON.stringify({from:env.CONTACT_FROM,to:[env.CONTACT_RECIPIENT],reply_to:email.trim(),subject:'New XuTu website inquiry',text:`Name: ${name.trim()}\nEmail: ${email.trim()}\n\nMessage:\n${message.trim()}`}),signal:AbortSignal.timeout(15000)
+     body:JSON.stringify({from:env.CONTACT_FROM,to:[env.CONTACT_RECIPIENT],reply_to:email.trim(),subject:'New inquiry from theivyarc.com',text:`Name: ${name.trim()}\nEmail: ${email.trim()}\n\nMessage:\n${message.trim()}`}),signal:AbortSignal.timeout(15000)
     });
     const result=await response.json().catch(()=>null);
     // Never relay a provider error: it may contain private addresses or credentials.
