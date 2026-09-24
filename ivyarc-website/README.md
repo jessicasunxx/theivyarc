@@ -53,9 +53,27 @@ The current origin check accepts exactly one `SITE_ORIGIN`. If both the Sites UR
 
 Hosted environment values are not included in this repository and do not transfer with GitHub. The owner must configure them separately on the chosen host. Changing values on the existing Sites deployment requires republishing the saved version.
 
-## Custom domain: theivyarc.com
+## GitHub Pages hosting
 
-The root domain has been added to the existing Sites project. Its last observed state was pending DNS validation on September 24, 2026. If continuing to use Sites, add these records at the domain's DNS provider:
+`.github/workflows/deploy-pages.yml` (at the repository root) publishes `ivyarc-website/public/` to GitHub Pages on every push to `main` that changes it. It deploys the static files only: `/api/contact` does not exist there, so the form shows its "unavailable" message and points visitors to Xiaohongshu. Asset paths in `index.html` are relative so the page also works at the `https://jessicasunxx.github.io/theivyarc/` preview URL.
+
+One-time setup:
+
+1. Repository **Settings → Pages → Build and deployment → Source**: choose **GitHub Actions**. Free accounts can only use Pages on public repositories; making the repository private again later takes the site offline unless the account has GitHub Pro.
+2. **Settings → Pages → Custom domain**: enter `theivyarc.com` and save. After the DNS check passes, tick **Enforce HTTPS**.
+3. At the DNS provider (Wix), replace the existing root A records and `www` CNAME:
+
+| Type | Host / Name | Value |
+| --- | --- | --- |
+| A | `@` (theivyarc.com) | `185.199.108.153` |
+| A | `@` (theivyarc.com) | `185.199.109.153` |
+| A | `@` (theivyarc.com) | `185.199.110.153` |
+| A | `@` (theivyarc.com) | `185.199.111.153` |
+| CNAME | `www` | `jessicasunxx.github.io` |
+
+## Custom domain: theivyarc.com (ChatGPT Sites)
+
+This section applies only if the site stays on Sites instead of GitHub Pages. The root domain has been added to the existing Sites project. Its last observed state was pending DNS validation on September 24, 2026. If continuing to use Sites, add these records at the domain's DNS provider:
 
 | Type | Host / Name | Value |
 | --- | --- | --- |
