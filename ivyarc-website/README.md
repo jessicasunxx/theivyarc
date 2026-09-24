@@ -41,9 +41,10 @@ That preview does not implement `/api/contact`, so the form stays unavailable. A
 GitHub Pages cannot run `/api/contact`, so on Pages the form posts to a Google Apps Script web app that appends each message to a Google Sheet and emails the sheet owner. The form's `data-sheet-endpoint` attribute in `public/index.html` holds the web app URL; when it is empty the form falls back to the Worker's `/api/contact` and shows "unavailable" on Pages.
 
 1. Create a Google Sheet (for example "The Ivy Arc inquiries") in the account that should receive messages.
-2. In the sheet, open **Extensions → Apps Script**, replace the editor contents with `google-sheet/Code.gs`, and save.
-3. **Deploy → New deployment**, type **Web app**, *Execute as* **Me**, *Who has access* **Anyone**, then **Deploy** and authorize. Google warns that the app is unverified because it is your own script: choose **Advanced → Go to … (unsafe)**.
-4. Copy the web app URL (`https://script.google.com/macros/s/…/exec`) into `data-sheet-endpoint` and push to `main`.
+2. In the sheet, open **Extensions → Apps Script**, select everything in the editor (the starter `function myFunction() {}` must go too), paste `google-sheet/Code.gs`, and save. Pasting inside `myFunction` hides `doPost`, and every submission then fails.
+3. Choose **setup** in the function menu and click **Run**. Authorize when asked; Google warns that the app is unverified because it is your own script, so choose **Advanced → Go to … (unsafe)**. The execution log prints the spreadsheet link. (A script created outside a sheet makes its own "The Ivy Arc inquiries" spreadsheet.)
+4. **Deploy → New deployment**, type **Web app**, *Execute as* **Me**, *Who has access* **Anyone**, then **Deploy**. Opening the web app URL in a private window should show `{"ok":true}`.
+5. Copy the web app URL (`https://script.google.com/macros/s/…/exec`) into `data-sheet-endpoint` and push to `main`.
 
 Messages appear in the sheet's **Inquiries** tab (Received, Name, Email, Message). The script validates input like the Worker, ignores the honeypot field, skips retries of the same submission, caps intake at 30 messages per hour, and stores visitor text as plain text so it can never run as a formula. After editing `Code.gs`, use **Deploy → Manage deployments → Edit → New version** so the same URL serves the new code.
 
