@@ -1,5 +1,5 @@
 // The Ivy Arc contact form -> Google Sheet.
-// Paste into Extensions > Apps Script of the Google Sheet that should collect inquiries,
+// Replace everything in the Apps Script editor with this file, run setup once,
 // then deploy as a web app (Execute as: Me, Who has access: Anyone). See README.md.
 
 const SHEET_NAME = 'Inquiries';
@@ -8,6 +8,16 @@ const MAX_PER_HOUR = 30; // Best-effort cap across all visitors, so a flood can'
 
 const EMAIL_PATTERN = /^[^\s<>@,;\r\n]+@[^\s<>@,;\r\n]+\.[^\s<>@,;\r\n]+$/;
 const ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// Run once from the editor (choose "setup", click Run): grants permissions and logs where inquiries go.
+function setup() {
+  Logger.log('Inquiries will be saved to: ' + getSheet().getParent().getUrl());
+}
+
+// Opening the web app URL in a browser shows {"ok":true} when the deployment is reachable.
+function doGet() {
+  return reply({ok: true});
+}
 
 function doPost(e) {
   let data;
@@ -29,13 +39,7 @@ function doPost(e) {
     const count = Number(cache.get(hour) || 0);
     if (count >= MAX_PER_HOUR) return reply({ok: false, code: 'rate'});
 
-    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
-    if (!sheet) {
-      sheet = spreadsheet.insertSheet(SHEET_NAME);
-      sheet.appendRow(['Received', 'Name', 'Email', 'Message']);
-      sheet.setFrozenRows(1);
-    }
+    const sheet = getSheet();
     sheet.appendRow([new Date(), asText(name.trim()), asText(email.trim()), asText(message.trim())]);
     cache.put('id:' + submissionId, '1', 21600);
     cache.put(hour, String(count + 1), 3600);
@@ -46,7 +50,7 @@ function doPost(e) {
           to: Session.getEffectiveUser().getEmail(),
           replyTo: email.trim(),
           subject: 'New inquiry from theivyarc.com',
-          body: `Name: ${name.trim()}\nEmail: ${email.trim()}\n\nMessage:\n${message.trim()}\n\nAll inquiries: ${spreadsheet.getUrl()}`
+          body: `Name: ${name.trim()}\nEmail: ${email.trim()}\n\nMessage:\n${message.trim()}\n\nAll inquiries: ${sheet.getParent().getUrl()}`
         });
       } catch (error) {} // The row is saved; a failed notification should not report failure to the visitor.
     }
@@ -56,6 +60,24 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function getSheet() {
+  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) {
+    // Standalone script (not opened from a sheet's Extensions menu): use a spreadsheet it creates once.
+    const properties = PropertiesService.getScriptProperties();
+    const id = properties.getProperty('SPREADSHEET_ID');
+    spreadsheet = id ? SpreadsheetApp.openById(id) : SpreadsheetApp.create('The Ivy Arc inquiries');
+    if (!id) properties.setProperty('SPREADSHEET_ID', spreadsheet.getId());
+  }
+  let sheet = spreadsheet.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(SHEET_NAME);
+    sheet.appendRow(['Received', 'Name', 'Email', 'Message']);
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
 }
 
 // Visitor text must never run as a spreadsheet formula (e.g. "=IMPORTXML(...)"), so force it to plain text.

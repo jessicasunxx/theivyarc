@@ -10,7 +10,7 @@
     approachEyebrow:'大藤的方式',approachTitle:'好的表达，<br>始于认真的',approachEm:'倾听。',approachDescription:'在讨论文字之前，我们先了解写下这些文字的你。',process1Title:'理解你的故事',process1Description:'回顾经历、兴趣与目标，找到那些能够说明你是谁、在意什么的具体时刻。',process2Title:'找到贯穿的线索',process2Description:'明确申请方向与文书结构，把过去的积累与下一阶段的学术目标连接起来。',process3Title:'带着目的去打磨',process3Description:'通过具体反馈，逐步调整结构、细节和语言，让表达更清晰，也保留你的声音。',
     meaning1:'稳稳向上，深深扎根',meaning2:'属于你自己的故事弧线',studioEyebrow:'大藤，名字里的初心',studioTitle:'扎根你的故事，<br>向下一章生长。',studioDescription:'大藤是一间专注申请辅导与文书表达的教育咨询工作室。我们相信，申请材料应当从你真实的经历与愿望中生长出来。',studioDescription2:'我们带来认真的提问、坦诚的反馈和新的视角。你带来属于自己的故事。',mentorTitle:'学术深度，文字视野。',mentorAdmissions:'导师团队的申请经历涵盖哥伦比亚大学、宾夕法尼亚大学和康奈尔大学的本科录取，以及哈佛大学、麻省理工学院和普林斯顿大学的理工科博士录取。',mentorWriting:'团队亦有以最高荣誉（summa cum laude）毕业于哥伦比亚大学哥伦比亚学院英语专业的成员，为个人叙事带来文学视角。',value1:'真实的声音',value2:'用心的策略',value3:'清晰的表达',
     questionsEyebrow:'在开始之前',questionsTitle:'让每一步，<br>更清晰。',faq1Question:'可以只修改一篇文书吗？',faq1Answer:'可以。辅导可以聚焦于单篇文书，也可以关注整套材料之间的配合。我们从你具体的表达需求出发。',faq2Question:'开始之前需要有完整初稿吗？',faq2Answer:'不需要。你可以带着想法、笔记或已有草稿开始。我们可以协助你梳理经历、形成提纲，或修改已经开始的写作。',faq3Question:'文书辅导具体包括什么？',faq3Answer:'通过提问、结构反馈和语言建议，帮助你清楚地表达自己的想法。你始终是文书的作者，所有内容都应基于真实经历。录取决定由各院校独立作出。',
-    closingEyebrow:'属于你的下一章',closingTitle:'从真实的<em>你</em>，开始。',contactIntro:'告诉我们你目前的申请阶段，以及希望获得的帮助。',inquiryTitle:'给我们留言',inquiryName:'你的姓名',inquiryEmail:'你的邮箱',inquiryMessage:'留言内容',inquiryHint:'欢迎介绍申请阶段、时间安排，以及你需要的帮助。10–5,000 字符。',inquiryPrivacy:'我们仅使用你的姓名、邮箱和留言回复你的咨询。留言会私密保存在我们的 Google 账户中。',inquirySend:'发送留言',contactAlternative:'你也可以在小红书搜索 THE IVY ARC，私信联系我们。',contactPlatform:'小红书 · XIAOHONGSHU',contactRecognition:'认准写有「大藤文书工作室」的绿色书本与藤叶头像。',copyAccount:'复制账号名称',footerTagline:'叙自己的故事，走自己的路。',backTop:'回到顶部',footerDescriptor:'独立教育咨询工作室'
+    closingEyebrow:'属于你的下一章',closingTitle:'从真实的<em>你</em>，开始。',contactIntro:'告诉我们你目前的申请阶段，以及希望获得的帮助。',inquiryTitle:'给我们留言',inquiryName:'你的姓名',inquiryEmail:'你的邮箱',inquiryMessage:'留言内容',inquiryHint:'欢迎介绍申请阶段、时间安排，以及你需要的帮助。10–5,000 字符。',inquiryPrivacy:'我们仅使用你的姓名、邮箱和留言回复你的咨询。留言会私密保存在我们的 Google 账户中。',inquirySend:'发送留言',contactAlternative:'你也可以在小红书搜索 XUTU STUDIO，私信联系我们。',contactPlatform:'小红书 · XIAOHONGSHU',contactRecognition:'认准写有「大藤文书工作室」的绿色书本与藤叶头像。',copyAccount:'复制账号名称',footerTagline:'叙自己的故事，走自己的路。',backTop:'回到顶部',footerDescriptor:'独立教育咨询工作室'
   };
   const nodes = [...document.querySelectorAll('[data-i18n]')];
   const en = Object.fromEntries(nodes.map(node => [node.dataset.i18n,node.innerHTML]));
@@ -38,18 +38,18 @@
   copyButton.addEventListener('click', async () => {
     copyButton.disabled = true;
     try {
-      await navigator.clipboard.writeText('THE IVY ARC');
+      await navigator.clipboard.writeText('XUTU STUDIO');
       document.querySelector('#copy-status').textContent = document.documentElement.lang === 'zh-CN'
-        ? '已复制！打开小红书，搜索 THE IVY ARC，私信联系我们。'
-        : 'Copied! Open Xiaohongshu, search THE IVY ARC, and send us a message.';
+        ? '已复制！打开小红书，搜索 XUTU STUDIO，私信联系我们。'
+        : 'Copied! Open Xiaohongshu, search XUTU STUDIO, and send us a message.';
     } catch {
       const range = document.createRange();
       range.selectNodeContents(document.querySelector('#xiaohongshu-account'));
       const selection = window.getSelection();
       if (selection) { selection.removeAllRanges(); selection.addRange(range); }
       document.querySelector('#copy-status').textContent = document.documentElement.lang === 'zh-CN'
-        ? '请复制上方账号名称 THE IVY ARC，然后在小红书中搜索。'
-        : 'Copy the account name THE IVY ARC above, then search for it in Xiaohongshu.';
+        ? '请复制上方账号名称 XUTU STUDIO，然后在小红书中搜索。'
+        : 'Copy the account name XUTU STUDIO above, then search for it in Xiaohongshu.';
     } finally {
       copyButton.disabled = false;
     }

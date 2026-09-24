@@ -25,6 +25,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
+      # Browsers may cache CSS/JS for 10 minutes; a per-commit query string makes them
+      # fetch the new files right after a deploy instead of mixing new HTML with old JS.
+      - name: Version CSS and JS URLs
+        run: |
+          sed -i -E "s/(href|src)=\"(styles\.css|app\.js)\"/\1=\"\2?v=${GITHUB_SHA::7}\"/" ivyarc-website/public/index.html
+          grep -q "app.js?v=" ivyarc-website/public/index.html
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
