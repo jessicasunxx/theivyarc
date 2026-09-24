@@ -1,6 +1,6 @@
 # The Ivy Arc website
 
-Bilingual educational consulting website for The Ivy Arc (大藤), with the 大藤文书工作室 logo and the Xiaohongshu account THE IVY ARC. Published at https://theivyarc.com via GitHub Pages. The studio was previously branded XuTu (叙途).
+Bilingual educational consulting website for The Ivy Arc (大藤), with the 大藤文书工作室 logo and the Xiaohongshu account XUTU STUDIO. Published at https://theivyarc.com via GitHub Pages. The studio was previously branded XuTu (叙途).
 
 This handoff contains the source of published Sites version 6, commit `c5240e527b2ac309433fa8cbc00fa1ad6a491ca6`, plus this guide. It contains no production secrets or private recipient address. The existing website remains hosted at https://xutu-admissions.cdeng.chatgpt.site.
 
