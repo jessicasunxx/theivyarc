@@ -1,6 +1,6 @@
-# XuTu / The Ivy Arc website
+# The Ivy Arc website
 
-Bilingual educational consulting website for XuTu (叙途), with the 大藤文书工作室 logo and the Xiaohongshu account XUTU STUDIO.
+Bilingual educational consulting website for The Ivy Arc (大藤), with the 大藤文书工作室 logo and the Xiaohongshu account THE IVY ARC. Published at https://theivyarc.com via GitHub Pages. The studio was previously branded XuTu (叙途).
 
 This handoff contains the source of published Sites version 6, commit `c5240e527b2ac309433fa8cbc00fa1ad6a491ca6`, plus this guide. It contains no production secrets or private recipient address. The existing website remains hosted at https://xutu-admissions.cdeng.chatgpt.site.
 
@@ -10,6 +10,7 @@ This handoff contains the source of published Sites version 6, commit `c5240e527
 - `public/styles.css`: responsive styling.
 - `public/app.js`: language switching and contact form interaction.
 - `public/assets/`: logo and campus image.
+- `google-sheet/Code.gs`: Google Apps Script that saves contact form messages to a Google Sheet (used on GitHub Pages).
 - `worker/contact.mjs`: HTTP handler, static file serving, and Resend email integration.
 - `worker/contact.test.mjs`: contact handler tests with mocked email transport.
 - `scripts/build.mjs`: bundles public assets and the handler into one Worker module.
@@ -35,7 +36,18 @@ python3 -m http.server 8000 --directory public
 
 That preview does not implement `/api/contact`, so the form stays unavailable. A functional preview requires a Worker-compatible runtime with the environment bindings below. GitHub stores the source; GitHub Pages alone cannot run the email backend.
 
-## Contact form: unfinished setup
+## Contact form on GitHub Pages: Google Sheet
+
+GitHub Pages cannot run `/api/contact`, so on Pages the form posts to a Google Apps Script web app that appends each message to a Google Sheet and emails the sheet owner. The form's `data-sheet-endpoint` attribute in `public/index.html` holds the web app URL; when it is empty the form falls back to the Worker's `/api/contact` and shows "unavailable" on Pages.
+
+1. Create a Google Sheet (for example "The Ivy Arc inquiries") in the account that should receive messages.
+2. In the sheet, open **Extensions → Apps Script**, replace the editor contents with `google-sheet/Code.gs`, and save.
+3. **Deploy → New deployment**, type **Web app**, *Execute as* **Me**, *Who has access* **Anyone**, then **Deploy** and authorize. Google warns that the app is unverified because it is your own script: choose **Advanced → Go to … (unsafe)**.
+4. Copy the web app URL (`https://script.google.com/macros/s/…/exec`) into `data-sheet-endpoint` and push to `main`.
+
+Messages appear in the sheet's **Inquiries** tab (Received, Name, Email, Message). The script validates input like the Worker, ignores the honeypot field, skips retries of the same submission, caps intake at 30 messages per hour, and stores visitor text as plain text so it can never run as a formula. After editing `Code.gs`, use **Deploy → Manage deployments → Edit → New version** so the same URL serves the new code.
+
+## Contact form on a Worker host: unfinished setup
 
 Email delivery is currently disabled. The handler and UI are implemented, but a Resend sending key and authorized sender still need to be configured. Tests mock the provider; they do not confirm real email delivery.
 
